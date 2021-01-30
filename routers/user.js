@@ -69,7 +69,8 @@ userRouter.get('/myProfile' , async (req, res) => { // will show the info of my 
 userRouter.patch('/profileUpdate' , async (req, res) => {   // update router for user
 try{
     const {username,fname,lname,email,age,gender} = req.body;
-    const user = await User.updateOne({ _id: req.signedData.id },{$set: {username:username,fname:fname,lname:lname,email:email,age:age,gender:gender}} );
+    const user = await User.updateOne({ _id: req.signedData.id },
+        {$set: {username:username,fname:fname,lname:lname,email:email,age:age,gender:gender}} );
     res.send(user);
 }
 catch(err){

@@ -7,17 +7,10 @@ const authenticationMiddleware = require('./middlewares/authentication');
 const logsMiddleware = require('./middlewares/logs');
 const errorHandlerMiddleware = require('./middlewares/errorhandler');
 
-
-
-
 const app = express();
 
 app.use(express.static('public'));
 app.use(express.json());
-
-app.get('/',(req,res)=>{
-    res.send("hellooww")
-})
 
 app.use( '/api/users',logsMiddleware,userRouter);
 app.use( '/api/todos' ,logsMiddleware,  authenticationMiddleware ,todoRouter);
