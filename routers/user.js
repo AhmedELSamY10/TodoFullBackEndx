@@ -2,9 +2,6 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user')
-const Todo = require('../models/todo')
-const Group = require('../models/group')
-
 const authenticationMiddleware = require('../middlewares/authentication');
 const userRouter = new express.Router();
 
@@ -16,15 +13,15 @@ userRouter.get('/getUsers',async(req,res)=>{
     catch(err){
         console.error(err);
         res.statusCode = 422;
-        res.json({ success: false, message: err.message });
+        res.json({ success: false, message: err.message });n
     }
 })
 
 userRouter.post('/reg'  , async (req,res)=>{                    // the registration router
     try{
-        const {username, password ,fname,lname,email,age,gender} = req.body;
+        const {username, email , password } = req.body;
         const hash = await bcrypt.hash(password,7); // to hash the password
-        const user = await User.create({username, password:hash ,fname,lname,email,age,gender})
+        const user = await User.create({username, email ,password:hash })
         res.statusCode = 201;
         res.send(user);
     }
@@ -68,9 +65,8 @@ userRouter.get('/myProfile' , async (req, res) => { // will show the info of my 
 
 userRouter.patch('/profileUpdate' , async (req, res) => {   // update router for user
 try{
-    const {username,fname,lname,email,age,gender} = req.body;
-    const user = await User.updateOne({ _id: req.signedData.id },
-        {$set: {username:username,fname:fname,lname:lname,email:email,age:age,gender:gender}} );
+    const {username,email} = req.body;
+    const user = await User.updateOne({ _id: req.signedData.id },{$set: {username:username,email:email}} );
     res.send(user);
 }
 catch(err){
@@ -82,16 +78,6 @@ catch(err){
 userRouter.delete('/profileDelete' , async (req, res) => {
     try{                                                                // this router will delete the user profile and its data
         const userById = await User.findById(req.signedData.id);
-        for(let i =0;i<userById.todos.length;i++)
-        {
-            const deletedtodo = await Todo.deleteOne({ _id: userById.todos[i] } );  // loop for delete all the user todo is the todo arrray
-            await userById.save();
-        }
-        for(let i =0;i<userById.groups.length;i++)
-        {
-            const deletedgroup = await Group.deleteOne({ _id: userById.groups[i] } );   // loop for delete all the user groups is the groups arrray
-            await userById.save();
-        }
         const user = await User.deleteOne({ _id: req.signedData.id } );   //delete the user it self
         res.send(user);
     }

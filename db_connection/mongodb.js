@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGO_DB || 'mongodb://localhost:27017/tododb', (err) => {
+mongoose.connect(process.env.MONGO_DB || 'mongodb://localhost:27017/ToDoToDay', (err) => {
     if(err) {
         console.warn("failed to connect to MongoDB")
         console.error(err);

@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
-require('./todo')
-require('./group')
-
 
 const UserSchema = new mongoose.Schema({
-
          username: {    type: String,
                         min: 3,
                         max: 30,
@@ -14,22 +10,10 @@ const UserSchema = new mongoose.Schema({
                         match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
                         index: true
                     },
-
         password:{
             type: String,
             required: true
         },
-
-        fname:{
-            type: String,
-            required: true
-        },
-
-        lname:{
-            type: String,
-            required: true
-        },
-
         email: {    type: String,
                     lowercase: true,
                     unique: true,
@@ -37,30 +21,42 @@ const UserSchema = new mongoose.Schema({
                     match: [/\S+@\S+\.\S+/, 'is invalid'], 
                     index: true
                 },
-
-        age:{
-                    type: Number,
-                    min: 12,
-                    max: 120,
-                    required: true
-        },
-
-        gender:{
-            type: String,
-            required: true,
-            maxlength: 6,
-            enum:["male","female"]
-        },
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         todos:[{
-            type:mongoose.Schema.Types.ObjectId,ref:'Todo'
+            title:{
+                type:String,
+                 min: 1,maxlength:100,
+            },
+            body :{
+                 type: String,
+                 min: 1,
+                 maxlength:500
+            },
+            status: { 
+                 type:String,
+                 default:"to-do",
+                 enum:["in-progress","to-do","done"]
+                 },
+                 group:
+                 {
+                    type:String,
+                    min: 1,maxlength:100,
+                    default:"any"
+                 },
+                 time:
+                 {
+                     type:Date,
+                    default: Date.now()
+                }
+                 
         }],
-         grooups:[{
-            type:mongoose.Schema.Types.ObjectId,ref:'Group'
-        }],
-        
-        
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        groups:[{
+            gname:{
+                type:String,
+                 min: 1,maxlength:100,
+            }
+        }]
 }
 , {timestamps: true}
 )
